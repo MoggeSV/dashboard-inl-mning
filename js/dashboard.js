@@ -1,6 +1,83 @@
 (function($) {
   'use strict';
   $(function() {
+
+    
+    
+    
+    if ($("#total-sales-amount").length) {
+      let request = new XMLHttpRequest();
+      request.onload = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        
+        var object = JSON.parse(this.response);
+
+        $("#total-sales-amount").text(`${object.amount} ${object.currency}`);
+        $("#total-sales-period").text(`${object.period}`);
+
+      }
+    }
+    request.open("GET", "https://fe18.azurewebsites.net/api/totalsales", true);
+    request.send();
+    }
+    
+    if ($("#total-purchases-amount").length) {
+      let request = new XMLHttpRequest();
+      request.onload = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        
+        var object = JSON.parse(this.response);
+
+        $("#total-purchases-amount").text(`${object.amount} ${object.currency}`);
+        $("#total-purchases-period").text(`${object.period}`);
+
+      }
+    }
+    request.open("GET", "https://fe18.azurewebsites.net/api/totalpurchases", true);
+    request.send();
+    }
+
+    if ($("#total-orders-amount").length) {
+      let request = new XMLHttpRequest();
+      request.onload = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        
+        var object = JSON.parse(this.response);
+
+        $("#total-orders-amount").text(`${object.amount} ${object.currency}`);
+        $("#total-orders-period").text(`${object.period}`);
+
+      }
+    }
+    request.open("GET", "https://fe18.azurewebsites.net/api/totalorders", true);
+    request.send();
+    }
+
+    if ($("#total-growth-amount").length) {
+      let request = new XMLHttpRequest();
+      request.onload = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        
+        var object = JSON.parse(this.response);
+
+        $("#total-growth-amount").text(`${object.amount} ${object.currency}`);
+        $("#total-growth-period").text(`${object.period}`);
+
+      }
+    }
+    request.open("GET", "https://fe18.azurewebsites.net/api/totalgrowth", true);
+    request.send();
+    }
+
+
+    
+
+
+
+
+
+
+
     if ($("#total-sales-chart").length) {
       var areaData = {
         labels: ["Mån","","Tue","", "Wed","", "Thu","", "Fri","", "Sat"],
@@ -441,6 +518,7 @@
     }
 
     if ($("#distribution-chart").length) {
+      
       var areaData = {
         labels: ["Jan", "Feb", "Mar"],
         datasets: [{
