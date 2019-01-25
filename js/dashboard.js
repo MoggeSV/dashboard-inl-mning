@@ -2,6 +2,8 @@
   'use strict';
   $(function () {
 
+    
+
     //Greeting & logout
     if ($("#greetingMessage").length) {
       let request = new XMLHttpRequest();
@@ -106,9 +108,9 @@
           let users = object.users;
           let growth = object.growth;
 
-          $("#downloadId").text(download);
-          $("#purchasesId").text(sales);
-          $("#usersId").text(users);
+          $("#downloadId").text(numberWithCommas(download));
+          $("#purchasesId").text(numberWithCommas(sales));
+          $("#usersId").text(numberWithCommas(users));
           $("#growthId").text(growth);
         }
       }
@@ -116,27 +118,7 @@
       request.send();
     }
 
-    // Downloads box
-
-    if ($("#offlineNumber").length) {
-      let request = new XMLHttpRequest();
-      request.onload = function () {
-        if (this.readyState == 4 && this.status == 200) {
-
-          var object = JSON.parse(this.response);
-
-          let offline = object.offline;
-          let online = object.online;
-
-          $("#offlineNumber").text(offline);
-          $("#onlineNumber").text(online);
-
-        }
-      }
-      request.open("GET", "https://fe18.azurewebsites.net/api/downloads", true);
-      request.send();
-    }
-
+    
     //Total sales chart box
 
 
@@ -158,10 +140,10 @@
           let queries = object.queries;
           let invoices = object.invoices;
 
-          $("#total-revenue").html(revenue);
-          $("#total-returns").html(returns);
-          $("#total-queries").html(queries);
-          $("#total-invoices").html(invoices);
+          $("#total-revenue").html(numberWithCommas(revenue));
+          $("#total-returns").html(numberWithCommas(returns));
+          $("#total-queries").html(numberWithCommas(queries));
+          $("#total-invoices").html(numberWithCommas(invoices));
           var areaData = {
             labels: days,
             datasets: [
@@ -292,7 +274,7 @@
           let users = object.users;
           let growth = object.growth;
 
-          $("#usersTotal").text(users);
+          $("#usersTotal").text(numberWithCommas(users));
           $("#difference").text(growth);
 
           var areaData = {
@@ -475,6 +457,26 @@
       request.send();
     }
 
+/* // Downloads box
+
+if ($("#offlineNumber").length) {
+  let request = new XMLHttpRequest();
+  request.onload = function () {
+    if (this.readyState == 4 && this.status == 200) {
+
+      var object = JSON.parse(this.response);
+
+      let offline = object.offline;
+      let online = object.online;
+
+      $("#offlineNumber").text(offline);
+      $("#onlineNumber").text(online);
+
+    }
+  }
+  request.open("GET", "https://fe18.azurewebsites.net/api/downloads", true);
+  request.send();
+}
 
 
     if ($('#offlineProgress').length) {
@@ -573,6 +575,113 @@
 
       bar.text.style.fontSize = '1rem';
       bar.animate(.84); // Number from 0.0 to 1.0
+    } */
+
+    if ($("#offlineProgress").length) {
+      let request = new XMLHttpRequest();
+      request.onload = function () {
+        if (this.readyState == 4 && this.status == 200) {
+  
+          var object = JSON.parse(this.response);
+  
+          let online = object.online;
+          let offline = object.offline;
+  
+          var bar = new ProgressBar.Circle(offlineProgress, {
+              color: '#000',
+              // This has to be the same size as the maximum width to
+              // prevent clipping
+              strokeWidth: 6,
+              trailWidth: 6,
+              easing: 'easeInOut',
+              duration: 1400,
+              text: {
+                autoStyleContainer: true,
+                style: {
+                  color: "#fff",
+                  position: 'absolute',
+                  left: '40%',
+                  top: '50%'
+                }
+              },
+              svgStyle: {
+                width: '90%'
+              },
+              from: {
+                color: '#f1536e',
+                width: 6
+              },
+              to: {
+                color: '#f1536e',
+                width: 6
+              },
+              // Set default step function for all animate calls
+              step: function (state, circle) {
+                circle.path.setAttribute('stroke', state.color);
+                circle.path.setAttribute('stroke-width', state.width);
+      
+                var value = Math.round(circle.value() * 100);
+                if (value === 0) {
+                  circle.setText('');
+                } else {
+                  circle.setText(value);
+                }
+      
+              }
+            });
+      
+            bar.text.style.fontSize = '1rem';
+            bar.animate(offline); // Number from 0.0 to 1.0
+  
+            var bar2 = new ProgressBar.Circle(onlineProgress, {
+              color: '#000',
+              // This has to be the same size as the maximum width to
+              // prevent clipping
+              strokeWidth: 6,
+              trailWidth: 6,
+              easing: 'easeInOut',
+              duration: 1400,
+              text: {
+                autoStyleContainer: true,
+                style: {
+                  color: "#fff",
+                  position: 'absolute',
+                  left: '40%',
+                  top: '50%'
+                }
+              },
+              svgStyle: {
+                width: '90%'
+              },
+              from: {
+                color: '#fda006',
+                width: 6
+              },
+              to: {
+                color: '#fda006',
+                width: 6
+              },
+              // Set default step function for all animate calls
+              step: function (state, circle) {
+                circle.path.setAttribute('stroke', state.color);
+                circle.path.setAttribute('stroke-width', state.width);
+      
+                var value = Math.round(circle.value() * 100);
+                if (value === 0) {
+                  circle.setText('');
+                } else {
+                  circle.setText(value);
+                }
+      
+              }
+            });
+      
+            bar2.text.style.fontSize = '1rem';
+            bar2.animate(online); // Number from 0.0 to 1.0
+        }
+      }
+      request.open("GET", "https://fe18.azurewebsites.net/api/downloads", true);
+      request.send();
     }
 
 
@@ -683,66 +792,122 @@
     }
 
 
+    //Tickets Box
 
-      //Tickets box
-  
-   if ($("#tickets-table").length) {
-    let request = new XMLHttpRequest();
-    request.onload = function () {
-    if (this.readyState == 4 && this.status == 200) {
-      
-      var object = JSON.parse(this.response);
-  
-      let allTickets = object.tickets;
-      let years = object.years;
-  
-      //Dropdown menu
-      years.forEach(year => {
-        $("#dropdownYears").append(`<a class="dropdown-item" href="#">${year}</a>`);
-      });
-  
-      //Loop through all tickets
-      allTickets.forEach(ticket => {
-  
-        //Regex test to get initials
-        var name = ticket.fullname;
-        var initials = name.match(/\b\w/g) || [];
-        initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
-          
-        //Append ticket row
-        let ticketText = `
-        <tr>
-        <td class="pl-0">
-          <div class="icon-rounded-primary icon-rounded-md">
-            <h4 class="font-weight-medium">${initials}</h4>
-          </div>
-        </td>
-        <td>
-          <p class="mb-0">${ticket.fullname}</p>
-          <p class="text-muted mb-0">${ticket.city}</p>
-        </td>
-        <td>
-          <p class="mb-0">${ticket.date}</p>
-          <p class="text-muted mb-0">${ticket.time}</p>
-        </td>
-        <td>
-          <p class="mb-0">${ticket.project}</p>
-          <p class="text-muted mb-0">${ticket.status}</p>
-        </td>
-        <td class="pr-0">
-          <i class="mdi mdi-dots-horizontal icon-sm cursor-pointer"></i>
-        </td>
-      </tr>`;
-  
-        $("#tickets-table").append(ticketText);
-  
-      });
-  
+    // Filter tickets click event
+    $("#dropdownMenuDate1").on("click", function () {
+      $(".dropdown-item").on("click", function (e) {
+        sortingTickets($(this).attr("data-year"));
+        console.log($(this).attr("data-year"));
+        e.preventDefault();
+      })
+    })
+
+
+    //Dropdown menu
+    if ($("#dropdownYears").length) {
+      let request = new XMLHttpRequest();
+      request.onload = function () {
+        if (this.readyState == 4 && this.status == 200) {
+
+          var object = JSON.parse(this.response);
+
+          let years = object.years;
+          let revYears = years.reverse();
+
+          revYears.forEach(year => {
+            $("#dropdownYears").append(`<a class="dropdown-item" data-year="${year}" href="#">${year}</a>`);
+          });
+
+        }
+      }
+      request.open("GET", "https://fe18.azurewebsites.net/api/tickets", true);
+      request.send();
+
     }
-  }
-  request.open("GET", "https://fe18.azurewebsites.net/api/tickets", true);
-  request.send();
-  }
+
+
+    function sortingTickets(year) {
+
+      let request = new XMLHttpRequest();
+      let yearMatch = new Array();
+
+
+      request.onload = function () {
+
+        if (this.readyState == 4 && this.status == 200) {
+          var object = JSON.parse(this.response);
+          let allTickets = object.tickets;
+          console.log(yearMatch);
+
+
+          // Filtering tickets that matched
+          allTickets.forEach(ticket => {
+
+            let date = new Date(ticket.date);
+            let ticketYear = date.getFullYear();
+
+            if (ticketYear == year) {
+              yearMatch.push(ticket);
+              console.log(`${ticketYear} | ${year}`);
+              console.log(ticket);
+            }
+          });
+          // Clears the table
+          $('#ticket-table-body').html("");
+
+          if (yearMatch.length == 0) {
+
+            $('#ticket-table-body').html(`<tr><td colspan="4" align="center"><h4 class="text-primary text-center font-weight-medium">Inget ticket matchar med året ${year}</h4></td></tr>`);
+
+
+          } else {// Adds the matched tickets to the table
+            yearMatch.forEach(tickets => {
+
+
+              let name = tickets.fullname;
+              let initials = getInitials(name);
+              function getInitials(name) {
+                var parts = name.split(' ')
+                var initials = ''
+                for (var i = 0; i < parts.length; i++) {
+                  if (parts[i].length > 0 && parts[i] !== '') {
+                    initials += parts[i][0]
+                  }
+                }
+                return initials
+              }
+
+              let addTicket = `<tr>
+                          <td class="pl-0">
+                          <div class="icon-rounded-primary icon-rounded-md">
+                          <h4 class="font-weight-medium">${initials}</h4>
+                          </div>
+                          </td>
+                          <td>
+                          <p class="mb-0">${tickets.fullname}</p>
+                          <p class="text-muted mb-0">${tickets.city}</p>
+                          </td>
+                          <td>
+                          <p class="mb-0">${tickets.date}</p>
+                          <p class="text-muted mb-0"> ${tickets.time}</p>
+                          </td>
+                          <td>
+                          <p class="mb-0">${tickets.project}</p>
+                          <p class="text-muted mb-0">${tickets.status}</p>
+                          </td>
+                          </tr>`;
+
+
+              $('#ticket-table-body').append(addTicket);
+            });
+          }
+
+        }
+      }
+      request.open("GET", "https://fe18.azurewebsites.net/api/tickets", true);
+      request.send();
+    }
 
     //Invoice table box
 
@@ -783,15 +948,13 @@
                         <td>${update.invoicenumber}</td>
                         <td>${update.customer}</td>
                         <td>${update.shipping}</td>
-                        <td class="font-weight-bold">${update.totalprice}</td>
-                        <td>${update.customerprice}</td>
+                        <td class="font-weight-bold">${numberWithCommas(update.totalprice)}</td>
+                        <td>${numberWithCommas(update.customerprice)}</td>
                         <td>
                           <div class="badge ${color} badge-fw">${update.status}</div>
                         </td>
                       </tr>
                   `
-
-
             $("#invoice-Table").append(invoiceText);
           });
 
@@ -1030,5 +1193,8 @@
       request.send();
     }
 
+    function numberWithCommas(x) {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
   });
 })(jQuery);

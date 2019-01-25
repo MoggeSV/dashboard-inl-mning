@@ -19,6 +19,7 @@ $(function () {
                     if (emailInput.val() == correctEmail && passwordInput.val() == correctPassword) {
                         window.location.replace("index.html");
                     } else {
+                        $('#login-failed').text("Inloggningen misslyckades, Ange ett korrekt användarnamn och lösenord");
                         event.preventDefault();
                     }
                 })
